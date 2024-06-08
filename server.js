@@ -6,8 +6,8 @@
  Name: emin feyziyev
  Student ID: 150187227
  Date:  june 7
- Cyclic Web App URL: _______________________________________________________
- GitHub Repository URL: ______________________________________________________
+ Cyclic Web App URL: https://web322app-eminfs-projects.vercel.app/
+ GitHub Repository URL: https://github.com/bakuvi/web322
 
  ********************************************************************************/
 
