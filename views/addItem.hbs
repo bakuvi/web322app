@@ -1,0 +1,30 @@
+<div class="container">
+    <h2>Add a New Item</h2>
+    <form action="/items/add" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" class="form-control" id="category" name="category" required>
+        </div>
+        <div class="form-group">
+            <label for="featureImage">Feature Image:</label>
+            <input type="file" class="form-control-file" id="featureImage" name="featureImage">
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="text" class="form-control" id="price" name="price" required>
+        </div>
+        <div class="form-group">
+            <label for="body">Description:</label>
+            <textarea class="form-control" id="body" name="body" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="published">Published:</label>
+            <input type="checkbox" id="published" name="published">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Item</button>
+    </form>
+</div>

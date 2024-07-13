@@ -1,0 +1,39 @@
+<article>
+    {{#if data.post}}
+        <h2>{{data.post.title}}</h2>
+        <img src="{{data.post.featureImage}}" alt="{{data.post.title}}">
+        <p>{{{data.post.body}}}</p>
+        <p>Category: {{data.post.category}}</p>
+        <p>Price: ${{data.post.price}}</p>
+        <p>Last Updated: {{data.post.postDate}}</p>
+    {{else}}
+        <div class="col-md-12 text-center">
+            <h2>{{data.message}}</h2>
+            <p>Please try another Post / Category</p>
+        </div>
+    {{/if}}
+</article>
+
+<aside>
+    <h4>Items</h4>
+    <ul>
+        {{#if data.posts}}
+            {{#each data.posts}}
+                <li><a href="/shop?id={{this.id}}&category={{../viewingCategory}}">{{this.title}}</a></li>
+            {{/each}}
+        {{else}}
+            <p>No items found</p>
+        {{/if}}
+    </ul>
+
+    <h4>Categories</h4>
+    <ul>
+        {{#if data.categories}}
+            {{#each data.categories}}
+                <li><a href="/shop?category={{this.id}}">{{this.category}}</a></li>
+            {{/each}}
+        {{else}}
+            <p>No categories found</p>
+        {{/if}}
+    </ul>
+</aside>

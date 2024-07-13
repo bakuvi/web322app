@@ -56,13 +56,7 @@ function getCategories() {
     });
 }
 
-module.exports = {
-    initialize,
-    getAllItems,
-    getPublishedItems,
-    getCategories
-};
-module.exports.addItem = function(itemData) {
+function addItem(itemData) {
     return new Promise((resolve, reject) => {
         if (itemData.published === undefined) {
             itemData.published = false;
@@ -74,9 +68,9 @@ module.exports.addItem = function(itemData) {
         items.push(itemData);
         resolve(itemData);
     });
-};
+}
 
-module.exports.getItemsByCategory = function(category) {
+function getItemsByCategory(category) {
     return new Promise((resolve, reject) => {
         let filteredItems = items.filter(item => item.category == category);
         if (filteredItems.length > 0) {
@@ -85,8 +79,9 @@ module.exports.getItemsByCategory = function(category) {
             reject("no results returned");
         }
     });
-};
-module.exports.getItemsByMinDate = function(minDateStr) {
+}
+
+function getItemsByMinDate(minDateStr) {
     return new Promise((resolve, reject) => {
         let filteredItems = items.filter(item => new Date(item.postDate) >= new Date(minDateStr));
         if (filteredItems.length > 0) {
@@ -95,9 +90,9 @@ module.exports.getItemsByMinDate = function(minDateStr) {
             reject("no results returned");
         }
     });
-};
+}
 
-module.exports.getItemById = function(id) {
+function getItemById(id) {
     return new Promise((resolve, reject) => {
         let foundItem = items.find(item => item.id == id);
         if (foundItem) {
@@ -106,4 +101,28 @@ module.exports.getItemById = function(id) {
             reject("no result returned");
         }
     });
+}
+
+// New function to get published items by category
+function getPublishedItemsByCategory(category) {
+    return new Promise((resolve, reject) => {
+        let filteredItems = items.filter(item => item.published === true && item.category == category);
+        if (filteredItems.length > 0) {
+            resolve(filteredItems);
+        } else {
+            reject("no results returned");
+        }
+    });
+}
+
+module.exports = {
+    initialize,
+    getAllItems,
+    getPublishedItems,
+    getCategories,
+    addItem,
+    getItemsByCategory,
+    getItemsByMinDate,
+    getItemById,
+    getPublishedItemsByCategory // Export the new function
 };
