@@ -1,10 +1,10 @@
 /*********************************************************************************
- *  WEB322 – Assignment 04
+ *  WEB322 – Assignment 05
  *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part
  *  of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name: _emin feyziyev_____________________ Student ID:150187227 ______________ Date: ____jul12____________
+ *  Name: _emin feyziyev_____________________ Student ID:150187227 ______________ Date: ____jul31____________
  *
  *  Cyclic Web App URL: https://dulcet-starburst-cd44f9.netlify.app/
  *
@@ -12,11 +12,9 @@
  *
  ********************************************************************************/
 
-
-
 const express = require('express');
 const path = require('path');
-const multer = require("multer");
+const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 const exphbs = require('express-handlebars');
@@ -34,8 +32,7 @@ cloudinary.config({
 
 const upload = multer();
 
-// Set up Handlebars
-const hbs = exphbs.create({
+app.engine('.hbs', exphbs.engine({
     extname: '.hbs',
     helpers: {
         navLink: function (url, options) {
@@ -53,12 +50,11 @@ const hbs = exphbs.create({
             }
         }
     }
-});
-
-app.engine('.hbs', hbs.engine);
+}));
 app.set('view engine', '.hbs');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware to set active route
 app.use((req, res, next) => {
@@ -190,6 +186,28 @@ app.get('/categories', (req, res) => {
         .catch(err => {
             res.render('categories', { message: "no results" });
         });
+});
+
+app.get('/categories/add', (req, res) => {
+    res.render('addCategory', { title: 'Add Category' });
+});
+
+app.post('/categories/add', (req, res) => {
+    storeService.addCategory(req.body)
+        .then(() => res.redirect('/categories'))
+        .catch(err => res.status(500).send("Unable to add category"));
+});
+
+app.get('/categories/delete/:id', (req, res) => {
+    storeService.deleteCategoryById(req.params.id)
+        .then(() => res.redirect('/categories'))
+        .catch(err => res.status(500).send("Unable to remove category / category not found"));
+});
+
+app.get('/items/delete/:id', (req, res) => {
+    storeService.deletePostById(req.params.id)
+        .then(() => res.redirect('/items'))
+        .catch(err => res.status(500).send("Unable to remove post / post not found"));
 });
 
 app.use((req, res) => {
