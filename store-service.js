@@ -1,10 +1,23 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('database', 'username', 'password', {
-    host: 'host',
+
+// Parse the connection string
+const connectionString = 'postgresql://bakuvi_owner:Xl8HqnTAw4yG@ep-silent-shape-a43otz89.us-east-1.aws.neon.tech/bakuvi?sslmode=require';
+const match = connectionString.match(/postgresql:\/\/([^:]+):([^@]+)@([^:\/]+)\/([^?]+)/);
+
+const database = match[4];
+const username = match[1];
+const password = match[2];
+const host = match[3];
+
+const sequelize = new Sequelize(database, username, password, {
+    host: host,
     dialect: 'postgres',
     port: 5432,
     dialectOptions: {
-        ssl: { rejectUnauthorized: false }
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
     },
     query: { raw: true }
 });
@@ -62,11 +75,15 @@ module.exports.getCategories = function() {
 
 module.exports.addItem = function(itemData) {
     return new Promise((resolve, reject) => {
+        console.log("Adding item:", itemData);  // Debug log
         itemData.published = itemData.published ? true : false;
         itemData.postDate = new Date();
         Item.create(itemData)
             .then(() => resolve())
-            .catch(err => reject("unable to create item"));
+            .catch(err => {
+                console.error("Error creating item:", err);  // Debug log
+                reject("unable to create item");
+            });
     });
 };
 

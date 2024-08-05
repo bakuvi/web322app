@@ -4,7 +4,7 @@
  *  of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name: _emin feyziyev_____________________ Student ID:150187227 ______________ Date: ____jul31____________
+ *  Name: _emin feyziyev_____________________ Student ID:150187227 ______________ Date: ____jul12____________
  *
  *  Cyclic Web App URL: https://dulcet-starburst-cd44f9.netlify.app/
  *
@@ -74,7 +74,16 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/items/add', (req, res) => {
-    res.render('addItem', { title: 'Add Item' });
+    storeService.getCategories()
+        .then((categories) => {
+            res.render('addItem', {
+                title: 'Add Item',
+                categories: categories
+            });
+        })
+        .catch((err) => {
+            res.status(500).send("Unable to load categories");
+        });
 });
 
 app.post('/items/add', upload.single("featureImage"), async (req, res) => {
@@ -100,7 +109,7 @@ app.post('/items/add', upload.single("featureImage"), async (req, res) => {
         upload(req).then((uploaded) => {
             processItem(uploaded.url);
         }).catch((err) => {
-            console.error(err);
+            console.error("Failed to upload image:", err);  // Debug log
             res.status(500).send("Failed to upload image");
         });
     } else {
@@ -110,9 +119,25 @@ app.post('/items/add', upload.single("featureImage"), async (req, res) => {
     function processItem(imageUrl) {
         req.body.featureImage = imageUrl;
 
+        // Ensure price is a valid number
+        if (isNaN(parseFloat(req.body.price))) {
+            return res.status(400).send("Invalid price");
+        }
+
+        // Ensure category is a valid integer
+        if (isNaN(parseInt(req.body.category))) {
+            return res.status(400).send("Invalid category");
+        }
+
+        req.body.price = parseFloat(req.body.price);
+        req.body.category = parseInt(req.body.category);
+
+        console.log("Processing item with data:", req.body);  // Debug log
+
         storeService.addItem(req.body).then(() => {
             res.redirect('/items');
         }).catch((err) => {
+            console.error("Error adding item:", err);  // Debug log
             res.status(500).send("Unable to add item");
         });
     }
